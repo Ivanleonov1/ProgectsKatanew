@@ -7,8 +7,8 @@ import jm.task.core.jdbc.model.User;
 import java.sql.SQLException;
 import java.util.List;
 
-public class UserServiceImpl extends UserDaoJDBCImpl implements UserService {
-    UserDao userDao = new UserDaoJDBCImpl();
+public class UserServiceImpl implements UserService {
+    private UserDao userDao = new UserDaoJDBCImpl();
     public void createUsersTable() {
         userDao.createUsersTable();
     }
@@ -24,8 +24,13 @@ public class UserServiceImpl extends UserDaoJDBCImpl implements UserService {
         System.out.println("User с именем – " + name + " добавлен в базу данных");
     }
 
-    public void removeUserById(long id) throws SQLException {
-        userDao.removeUserById(id);
+    public void removeUserById(long id)  {
+       try {
+           userDao.removeUserById(id);
+       }catch (SQLException e) {
+           e.printStackTrace();
+       }
+
     }
 
     public List<User> getAllUsers() {
