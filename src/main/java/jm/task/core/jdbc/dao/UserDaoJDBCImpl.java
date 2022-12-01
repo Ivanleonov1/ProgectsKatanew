@@ -26,8 +26,6 @@ public class UserDaoJDBCImpl implements UserDao {
     private static final String TRUNCATE_TABLE = "TRUNCATE TABLE users";
 
 
-    //private User user = new User();
-
     private Connection connection = getConnection();
     public UserDaoJDBCImpl() {
 
@@ -43,7 +41,7 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void dropUsersTable() {
-        try ( PreparedStatement preparedStatement = connection.prepareStatement(DROP_TABLE)){
+        try (PreparedStatement preparedStatement = connection.prepareStatement(DROP_TABLE)){
             preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -64,10 +62,11 @@ public class UserDaoJDBCImpl implements UserDao {
 
         }
     }
-    public void removeUserById(long id) throws SQLException {
+    public void removeUserById(long id) {
         PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USERS_ID);
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
+            preparedStatement.close();
 
     }
 
@@ -89,10 +88,9 @@ public class UserDaoJDBCImpl implements UserDao {
         return users;
     }
     public void cleanUsersTable() {
-        try (Statement statement = connection.createStatement()) {
+        Statement statement = connection.createStatement();
             statement.executeUpdate(TRUNCATE_TABLE);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
+
     }
 }
