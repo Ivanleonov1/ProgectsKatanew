@@ -25,11 +25,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public void removeUserById(long id)  {
-       try {
            userDao.removeUserById(id);
-       }catch (SQLException e) {
-           e.printStackTrace();
-       }
 
     }
 
