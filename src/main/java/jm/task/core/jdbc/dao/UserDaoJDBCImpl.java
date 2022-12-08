@@ -30,7 +30,6 @@ public class UserDaoJDBCImpl implements UserDao {
     public UserDaoJDBCImpl() {
 
     }
-
     public void createUsersTable() {
         try (PreparedStatement preparedStatement = connection.
                 prepareStatement(CREATE_TABLE)) {
@@ -39,7 +38,6 @@ public class UserDaoJDBCImpl implements UserDao {
             e.printStackTrace();
         }
     }
-
     public void dropUsersTable() {
         try (PreparedStatement preparedStatement = connection.prepareStatement(DROP_TABLE)){
             preparedStatement.executeUpdate();
@@ -47,7 +45,6 @@ public class UserDaoJDBCImpl implements UserDao {
             throw new RuntimeException(e);
         }
     }
-
     public void saveUser(String name, String lastName, byte age) {
         User user = null;
         if (user != null) {
@@ -59,14 +56,16 @@ public class UserDaoJDBCImpl implements UserDao {
             } catch (SQLException e) {
                 throw new RuntimeException(e);
             }
-
         }
     }
     public void removeUserById(long id) {
-        PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USERS_ID);
+
+        try (PreparedStatement preparedStatement = connection.prepareStatement(DELETE_USERS_ID)) {
             preparedStatement.setLong(1, id);
             preparedStatement.executeUpdate();
-
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public List<User> getAllUsers() {
@@ -87,9 +86,11 @@ public class UserDaoJDBCImpl implements UserDao {
         return users;
     }
     public void cleanUsersTable() {
-        Statement statement = connection.createStatement();
+
+        try (Statement statement = connection.createStatement()){
             statement.executeUpdate(TRUNCATE_TABLE);
-
-
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
